@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DatabaseService.Controllers;
 
-[Route("event")]
 [ApiController]
+[Route("event")]
 public class EventController : ControllerBase
 {
     private readonly IEventService _eventService;
@@ -16,6 +16,6 @@ public class EventController : ControllerBase
     }
 
     [HttpPost("send")]
-    public async Task SendEvent(Event notificationEvent, CancellationToken cancellationToken)
+    public async Task SendEvent([FromBody] Event notificationEvent, CancellationToken cancellationToken = default)
         => await _eventService.SendEventAsync(notificationEvent, cancellationToken);
 }

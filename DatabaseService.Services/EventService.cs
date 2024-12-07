@@ -2,9 +2,10 @@ using DatabaseService.DataAccess.Abstractions;
 using DatabaseService.DataAccess.RabbitMq;
 using DatabaseService.Models.Postgres;
 using DatabaseService.Models.Rabbit;
+using DatabaseService.Services.Abstractions;
 using Newtonsoft.Json;
 
-namespace DatabaseService.Services.Abstractions;
+namespace DatabaseService.Services;
 
 public class EventService : IEventService
 {
@@ -19,6 +20,7 @@ public class EventService : IEventService
 
     public async Task SendEventAsync(Event notificationEvent, CancellationToken cancellationToken = default)
     {
+        notificationEvent.NotificationId = Guid.NewGuid().ToString();
         var message = JsonConvert.SerializeObject(notificationEvent);
         var isSuccess = await _rabbitMqService.SendMessageAsync(message, cancellationToken);
 

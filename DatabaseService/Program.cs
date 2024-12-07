@@ -2,6 +2,7 @@ using DatabaseService.DataAccess;
 using DatabaseService.DataAccess.Abstractions;
 using DatabaseService.DataAccess.RabbitMq;
 using DatabaseService.Infrastructure;
+using DatabaseService.Services;
 using DatabaseService.Services.Abstractions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,7 +15,12 @@ var databaseConnectionString = builder.Configuration.GetConnectionString("PgConn
                                ?? throw new ArgumentNullException("ConnectionStrings:AppDatabase",
                                    "Database connection string is not initialized");
 
-builder.Services.AddControllers();
+builder.Services
+    .AddControllers()
+    .AddMvcOptions(opt =>
+    {
+        opt.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
+    }).AddNewtonsoftJson();
 
 builder.Services.AddDbContext<AppDbContext>(
     new DbContextOptionsSetup(databaseConnectionString).Setup);
@@ -34,6 +40,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseRouting();
+app.MapControllers();
 app.UseHttpsRedirection();
 
 await app.InitAsync();

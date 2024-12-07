@@ -1,12 +1,9 @@
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace DatabaseService.Models.Rabbit;
 
 public class Metadata
 {
-    [JsonPropertyName("subject")]
     public string? Subject { get; set; }
-        
-    [JsonPropertyName("Body")]
     public required string Body { get; set; }
 }
